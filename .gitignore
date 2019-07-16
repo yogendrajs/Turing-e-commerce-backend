@@ -1,0 +1,11 @@
+# to hide all the private keys in the environment variables
+.env
+
+# a network to establish network to localhost server
+ngrok
+
+# Dependency directories
+node_modules/
+
+# my own exported sql file after working on database
+database/turingdb.sql
