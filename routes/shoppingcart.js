@@ -21,8 +21,7 @@ module.exports = function(shoppingcart, knex){
 
         // for showing whole data to the user
         function selection(){
-            // knex('orders')
-            // .insert({})
+            
             knex
             .select(
                 'item_id',
@@ -40,9 +39,8 @@ module.exports = function(shoppingcart, knex){
             .where('shopping_cart.cart_id', cart_id)
             .then((data) => {
                 console.log('your cart has been posted!')
-                for (let i of data){
-                    i.subtotal = parseFloat((i.quantity * i.price).toFixed(2))
-                }
+                data.map(eachItem => eachItem.subtotal = parseFloat((eachItem.quantity * eachItem.price).toFixed(2)))
+
                 return res.json(data);
             })
             .catch((err) => {
@@ -119,9 +117,7 @@ module.exports = function(shoppingcart, knex){
         })
         .where('shopping_cart.cart_id', req.params.cart_id)
         .then((data) => {
-            for (let i of data){
-                i.subtotal = parseFloat((i.quantity * i.price).toFixed(2));
-            }
+            data.map(eachItem => eachItem.subtotal = parseFloat((eachItem.quantity * eachItem.price).toFixed(2)));
             console.log('sent data by shopping cart!');
             return res.json(data);
         })
@@ -163,9 +159,7 @@ module.exports = function(shoppingcart, knex){
                 .where('shopping_cart.cart_id', cartdata[0].cart_id)
                 .then((data) => {
                     console.log('your cart has been updated!')
-                    for (let i of data){
-                        i.subtotal = parseFloat((i.quantity * i.price).toFixed(2))
-                    }
+                    data.map(eachItem => eachItem.subtotal = parseFloat((eachItem.quantity * eachItem.price).toFixed(2)));            
                     return res.json(data);
                 })
                 .catch((err) => {
@@ -203,14 +197,7 @@ module.exports = function(shoppingcart, knex){
         })
         .where('shopping_cart.cart_id', req.params.cart_id)
         .then((data) => {
-            for (let i of data){
-                i.subtotal = parseFloat((i.price * i.quantity).toFixed(2))
-            }
-            let totalAmount = 0;
-            for (let i of data){
-                totalAmount += i.subtotal;
-            }
-            // return res.json()
+            let totalAmount = data.map(eachItem => eachItem.subtotal = parseFloat((eachItem.price * eachItem.quantity).toFixed(2))).reduce((a, b) => a+b, 0);
             return res.json({total_amount: totalAmount});
         })
     })

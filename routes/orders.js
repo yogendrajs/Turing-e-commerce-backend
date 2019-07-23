@@ -21,15 +21,13 @@ module.exports = function(orders, knex){
                     knex('shopping_cart')
                     .join('product', function(){
                         this.on('shopping_cart.product_id', 'product.product_id')
-                    })
-                    .where('shopping_cart.cart_id', cart_id)
-                    .then((shopping_cart_data) => {
-                        for (let i of shopping_cart_data){
-                            sub = i.price * i.quantity
-                            totalOfCart += sub;
-                        }
-                        console.log(totalOfCart);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        })
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .where('shopping_cart.cart_id', cart_id)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .then((shopping_cart_data) => {
                         
+                        totalOfCart = shopping_cart_data.map(unitData => unitData.price * unitData.quantity).reduce((a, b) => a + b, 0)
+                        console.log(totalOfCart);
+
                         knex('orders')
                         .insert({
                             'total_amount': totalOfCart,
@@ -48,23 +46,26 @@ module.exports = function(orders, knex){
                                 knex('orders')
                                 .then((orders_data) => {
 
-                                    for (let j of shopping_cart_data){
-                                        knex('order_detail')
-                                        .insert({
-                                            'order_id': orders_data[orders_data.length-1].order_id,
-                                            'product_id': j.product_id,
-                                            'attributes': j.attributes,
-                                            'product_name': j.name,
-                                            'quantity': j.quantity,
-                                            'unit_cost': j.price
-                                        })
-                                        .then(() => {
-                                            console.log();
-                                        })
-                                        .catch((err) => {
-                                            console.log(err);
-                                        })
-                                    }
+                                    shopping_cart_data.map(eachItem => {
+                                        return (
+                                            knex('order_detail')
+                                            .insert({
+                                                'order_id': orders_data[orders_data.length-1].order_id,
+                                                'product_id': eachItem.product_id,
+                                                'attributes': eachItem.attributes,
+                                                'product_name': eachItem.name,
+                                                'quantity': eachItem.quantity,
+                                                'unit_cost': eachItem.price
+                                            })
+                                            .then(() => {
+                                                console.log();
+                                            })
+                                            .catch((err) => {
+                                                console.log(err);
+                                            })
+                                        )
+                                    })
+
                                     return res.json({order_id: orders_data[orders_data.length-1].order_id});
                                 })
                                 .catch((err) => {
@@ -146,9 +147,9 @@ module.exports = function(orders, knex){
                 .from('order_detail')
                 .where('order_detail.order_id', order_id)
                 .then((data) => {
-                    for (let i of data){
-                        i.subtotal = parseFloat((i.quantity * i.unit_cost).toFixed(2))
-                    }
+    
+                    data.map(allData => allData.subtotal = parseFloat((allData.quantity * allData.unit_cost).toFixed(2)))
+
                     console.log('data by order id sent!');
                     return res.json(data);
                 })
