@@ -45,16 +45,16 @@ module.exports = function(orders, knex){
                                 knex('orders')
                                 .then((orders_data) => {
 
-                                    shopping_cart_data.map(eachDic => {
+                                    shopping_cart_data.map(eachItem => {
                                         return (
                                             knex('order_detail')
                                             .insert({
                                                 'order_id': orders_data[orders_data.length-1].order_id,
-                                                'product_id': eachDic.product_id,
-                                                'attributes': eachDic.attributes,
-                                                'product_name': eachDic.name,
-                                                'quantity': eachDic.quantity,
-                                                'unit_cost': eachDic.price
+                                                'product_id': eachItem.product_id,
+                                                'attributes': eachItem.attributes,
+                                                'product_name': eachItem.name,
+                                                'quantity': eachItem.quantity,
+                                                'unit_cost': eachItem.price
                                             })
                                             .then(() => {
                                                 console.log();
