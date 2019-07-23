@@ -10,8 +10,6 @@ module.exports = function(orders, knex){
         let {body} = req;
         let {cart_id, shipping_id, tax_id} = body;
         // verifying jwt-token
-        var totalOfCart = 0; 
-        var sub;
         jwt.verify(req.token, configdata.secretkey, (err, authData) => {
             if (!err){
                 knex('customer')
