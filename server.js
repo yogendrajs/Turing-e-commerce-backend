@@ -1,8 +1,8 @@
-const express     =     require('express')
-    , configdata  =     require('./config')
-    , app         =     express()
-  
-const {DB_HOST, DB_USER, DB_NAME, DB_PASS, PORT} = configdata.envdata
+const express = require('express'),
+    configdata = require('./config'),
+    app = express()
+
+const { DB_HOST, DB_USER, DB_NAME, DB_PASS, PORT } = configdata.envdata
 
 app.use(express.json());
 var knex = require('knex')({
@@ -13,12 +13,12 @@ var knex = require('knex')({
         database: DB_NAME,
         password: DB_PASS
     }
-})
+});
 // console.log(DB_HOST, DB_USER, DB_NAME, DB_PASS, PORT);
 
 // some response errors go here
 module.exports = {
-    error500:{
+    error500: {
         "code": "USR_02",
         "message": "The field example is empty.",
         "field": "example",
@@ -27,10 +27,10 @@ module.exports = {
 
     err400: {
         "error": {
-          "status": 400,
-          "code": "DEP_02",
-          "message": "Don'exist department with this ID.",
-          "field": "department_id"
+            "status": 400,
+            "code": "DEP_02",
+            "message": "Don'exist department with this ID.",
+            "field": "department_id"
         }
     },
 
@@ -51,7 +51,7 @@ module.exports = {
             "field": "email"
         }
     },
-    
+
     emaillogin: {
         "error": {
             "status": 400,
@@ -64,8 +64,8 @@ module.exports = {
 
 // route to departments.js
 var departments = express.Router();
-require('./routes/departments')(departments,knex);
-app.use('/departments',departments);
+require('./routes/departments')(departments, knex);
+app.use('/departments', departments);
 
 // route to category.js
 var categories = express.Router();
@@ -75,7 +75,7 @@ app.use('/categories', categories);
 // route to attributes.js
 var attributes = express.Router();
 require('./routes/attributes')(attributes, knex);
-app.use('/attributes',attributes);
+app.use('/attributes', attributes);
 
 // route to products.js
 var products = express.Router();
