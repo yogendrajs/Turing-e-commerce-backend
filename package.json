@@ -14,7 +14,7 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.19.5",
     "mysql": "^2.17.1",
-    "stripe": "^7.10.0"
+    "stripe": "^7.15.0"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
